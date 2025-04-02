@@ -1,3 +1,11 @@
+.back_button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: invert(1);
+  z-index: 20;
+}
+
 .menu_screen {
   display: flex;
   flex-direction: column;
