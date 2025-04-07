@@ -1,8 +1,14 @@
-import { OrbitControls, useGLTF, useHelper } from "@react-three/drei";
-import { Canvas, useLoader } from "@react-three/fiber";
-import { useRef, useState } from "react";
+import {
+  Environment,
+  OrbitControls,
+  useGLTF,
+  useHelper,
+} from "@react-three/drei";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./App.module.css";
+import Chess from "./components/ChessGame";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -60,28 +66,40 @@ function SpotLightWithHelper({
   angle = Math.PI / 7,
 }) {
   const lightRef = useRef();
+  const emptyRef = useRef();
 
   useHelper(lightRef, THREE.SpotLightHelper, "red");
 
+  useFrame((state) => {
+    const x = Math.sin(state.clock.elapsedTime) * 5;
+
+    emptyRef.current.position.x = x;
+    lightRef.current.target = emptyRef.current;
+    lightRef.current.position.x = x;
+  });
+
   return (
-    <spotLight
-      ref={lightRef}
-      angle={angle}
-      intensity={intensity}
-      color={color}
-      position={position}
-      castShadow
-    />
+    <>
+      <spotLight
+        ref={lightRef}
+        angle={angle}
+        intensity={intensity}
+        color={color}
+        position={position}
+        castShadow
+      />
+      <object3D ref={emptyRef} position={[0, 0, 0]} />
+    </>
   );
 }
 
 function ModelExample2() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas shadows>
+      <Canvas orthographic={true} camera={{ position: [15, 20, 30] }} shadows>
         <Model2 />
         <Cube color={"red"} position={[2, 2, 8]} />
-        <OrbitControls minDistance={2} maxDistance={150} />
+        <OrbitControls target={[0, 10, 0]} minDistance={2} maxDistance={150} />
         <ambientLight intensity={0.8} />
         {/* <directionalLight
             color="white"
@@ -109,7 +127,10 @@ function Model1() {
 function ModelExample1() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas style={{ backgroundColor: "darkgray" }}>
+      <Canvas
+        camera={{ position: [5, 2, 3] }}
+        style={{ backgroundColor: "darkgray" }}
+      >
         <Model1 />
         <OrbitControls />
         <ambientLight intensity={0.5} />
@@ -121,6 +142,23 @@ function ModelExample1() {
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState(0);
+  const squarePositions = useRef([]);
+
+  useEffect(() => {
+    if (currentScreen === 4) {
+      const squaresInARow = 4;
+      for (let i = -(squaresInARow - 1); i <= squaresInARow - 1; i++) {
+        if (i !== 0 && i % 2 !== 0) {
+          for (let j = -(squaresInARow - 1); j <= squaresInARow - 1; j++) {
+            if (j !== 0 && j % 2 !== 0) {
+              console.log([i, 0, j]);
+              squarePositions.current.push([i, 0, j]);
+            }
+          }
+        }
+      }
+    }
+  }, [currentScreen]);
 
   return (
     <>
@@ -159,23 +197,29 @@ function App() {
               >
                 3d Shapes
               </button>
+              <button
+                style={{ marginTop: "24px" }}
+                onClick={() => setCurrentScreen(4)}
+              >
+                Chess
+              </button>
             </div>
           </>
         ) : currentScreen === 1 ? (
           <>
-            {/* screen 1 */}
+            {/* scene 1 */}
             <ModelExample1 />
           </>
         ) : currentScreen === 2 ? (
           <>
-            {/* screen 2 */}
+            {/* scene 2 */}
             <ModelExample2 />
           </>
-        ) : (
+        ) : currentScreen === 3 ? (
           <>
-            {/* screen 3 */}
+            {/* scene 3 */}
             <div style={{ width: "100vw", height: "100vh" }}>
-              <Canvas shadows>
+              <Canvas camera={{ position: [5, 0, 0] }} shadows>
                 <OrbitControls />
                 <ambientLight intensity={1} />
                 <SpotLightWithHelper
@@ -192,8 +236,14 @@ function App() {
                 <Cube position={[1, 1, 0]} color={"green"} size={[1, 1, 1]} />
                 <Cube position={[1, -1, 0]} color={"green"} size={[2, 2, 2]} />
                 <Sphere position={[-1, 0, 0]} color={"red"} />
+                <Environment preset="dawn" background blur={0.6} />
               </Canvas>
             </div>
+          </>
+        ) : (
+          <>
+            {/* scene 4 */}
+            <Chess squarePositions={squarePositions.current} />
           </>
         )}
       </div>
