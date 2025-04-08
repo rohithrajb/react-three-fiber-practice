@@ -85,7 +85,7 @@ function SpotLightWithHelper({
   );
 }
 
-function ModelExample2() {
+function Model2Scene() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas orthographic={true} camera={{ position: [15, 20, 30] }} shadows>
@@ -116,7 +116,7 @@ function Model1() {
   return <primitive object={gltf.scene} />;
 }
 
-function ModelExample1() {
+function Model1Scene() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas
@@ -207,12 +207,12 @@ function App() {
         ) : currentScreen === 1 ? (
           <>
             {/* scene 1 */}
-            <ModelExample1 />
+            <Model1Scene />
           </>
         ) : currentScreen === 2 ? (
           <>
             {/* scene 2 */}
-            <ModelExample2 />
+            <Model2Scene />
           </>
         ) : currentScreen === 3 ? (
           <>
