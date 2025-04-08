@@ -24,14 +24,14 @@ function ChessBoardSquare({ position, color = "black" }) {
   );
 }
 
-function ChessBoard({ squarePositions }) {
+function ChessBoard({ boardSquares }) {
   return (
     <mesh>
-      {squarePositions.map((position, idx) => (
+      {boardSquares.map((squareData, idx) => (
         <ChessBoardSquare
           key={idx}
-          position={position}
-          color={position[0] * position[2] < 0 ? "black" : "white"}
+          position={squareData.position}
+          color={squareData.color}
         />
       ))}
     </mesh>
@@ -46,7 +46,7 @@ function Pawn({ position }) {
   return <primitive object={glb.scene} position={position} />;
 }
 
-function ChessScene({ squarePositions }) {
+function ChessScene({ boardSquares }) {
   const pawnPosition = useChessStore((state) => state.pawnPosition);
 
   return (
@@ -54,7 +54,7 @@ function ChessScene({ squarePositions }) {
       <Canvas camera={{ position: [0, 5, 10] }}>
         <OrbitControls />
         <ambientLight />
-        <ChessBoard squarePositions={squarePositions} />
+        <ChessBoard boardSquares={boardSquares} />
         <Pawn position={pawnPosition} />
         <Environment preset="dawn" background blur={0.6} />
       </Canvas>

@@ -29,15 +29,7 @@ function Cube({ position, color, size }) {
 
 function Sphere({ position, color, scale }) {
   return (
-    <mesh
-      position={position}
-      scale={scale}
-      onClick={() => {
-        console.log("check");
-      }}
-      castShadow
-      receiveShadow
-    >
+    <mesh position={position} scale={scale} castShadow receiveShadow>
       <sphereGeometry args={[0.6, 50, 50]} />
       <meshStandardMaterial color={color} />
     </mesh>
@@ -142,17 +134,24 @@ function ModelExample1() {
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState(0);
-  const squarePositions = useRef([]);
+  const boardSquares = useRef([]);
 
   useEffect(() => {
     if (currentScreen === 4) {
       const squaresInARow = 4;
+      let rowNumber = 1;
       for (let i = -(squaresInARow - 1); i <= squaresInARow - 1; i++) {
-        if (i !== 0 && i % 2 !== 0) {
+        if (i % 2 !== 0) {
+          // setting the color of the first square in the row
+          let squareColor = rowNumber % 2 === 0 ? "black" : "white";
+          rowNumber++;
           for (let j = -(squaresInARow - 1); j <= squaresInARow - 1; j++) {
-            if (j !== 0 && j % 2 !== 0) {
-              console.log([i, 0, j]);
-              squarePositions.current.push([i, 0, j]);
+            if (j % 2 !== 0) {
+              boardSquares.current.push({
+                position: [i, 0, j],
+                color: squareColor,
+              });
+              squareColor = squareColor === "black" ? "white" : "black";
             }
           }
         }
@@ -243,7 +242,7 @@ function App() {
         ) : (
           <>
             {/* scene 4 */}
-            <Chess squarePositions={squarePositions.current} />
+            <Chess boardSquares={boardSquares.current} />
           </>
         )}
       </div>
