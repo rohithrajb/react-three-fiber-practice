@@ -23,7 +23,7 @@ function Scene() {
     <>
       <OrbitControls />
       <spotLight ref={lightRef} color="white" castShadow />
-      <Suspense>
+      {/* <Suspense> */}
         <Physics debug>
           <RigidBody colliders="ball">
             <mesh scale={0.3} position={[0, 2, 0]} castShadow>
@@ -59,13 +59,13 @@ function Scene() {
             position={[2.5, 0, 0]}
           />
         </Physics>
-      </Suspense>
+      {/* </Suspense> */}
       <Environment preset="apartment" background blur={0.2} />
     </>
   );
 }
 
-export default function BreakoutGame() {
+export default function JuggleGame() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas camera={{ position: [0, 2, 5] }} shadows>

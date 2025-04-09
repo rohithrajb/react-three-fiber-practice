@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./App.module.css";
 import Chess from "./components/ChessGame";
-import BreakoutGame from "./components/BreakoutGame";
+import JuggleGame from "./components/JuggleGame";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -207,7 +207,7 @@ function App() {
                 style={{ marginTop: "24px" }}
                 onClick={() => setCurrentScreen(5)}
               >
-                Breakout game
+                Juggle game
               </button>
             </div>
           </>
@@ -254,7 +254,7 @@ function App() {
         ) : (
           <>
             {/* scene 5 */}
-            <BreakoutGame />
+            <JuggleGame />
           </>
         )}
       </div>
