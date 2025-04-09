@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import styles from "./App.module.css";
 import Chess from "./components/ChessGame";
+import BreakoutGame from "./components/BreakoutGame";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -202,6 +203,12 @@ function App() {
               >
                 Chess
               </button>
+              <button
+                style={{ marginTop: "24px" }}
+                onClick={() => setCurrentScreen(5)}
+              >
+                Breakout game
+              </button>
             </div>
           </>
         ) : currentScreen === 1 ? (
@@ -239,10 +246,15 @@ function App() {
               </Canvas>
             </div>
           </>
-        ) : (
+        ) : currentScreen === 4 ? (
           <>
             {/* scene 4 */}
             <Chess boardSquares={boardSquares.current} />
+          </>
+        ) : (
+          <>
+            {/* scene 5 */}
+            <BreakoutGame />
           </>
         )}
       </div>

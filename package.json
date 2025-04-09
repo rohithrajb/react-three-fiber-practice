@@ -14,6 +14,7 @@
   "dependencies": {
     "@react-three/drei": "^10.0.5",
     "@react-three/fiber": "^9.1.1",
+    "@react-three/rapier": "^2.1.0",
     "@types/three": "^0.175.0",
     "gsap": "^3.12.7",
     "react": "^19.0.0",
