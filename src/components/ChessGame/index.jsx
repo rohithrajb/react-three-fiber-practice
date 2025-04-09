@@ -2,9 +2,24 @@ import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import useChessStore from "./useChessStore";
+import gsap from "gsap";
 
 function ChessBoardSquare({ position, color = "black" }) {
-  const movePawn = useChessStore((state) => state.setPawnPosition);
+  const pawnPosition = useChessStore((state) => state.pawnPosition);
+  const setPawnPosition = useChessStore((state) => state.setPawnPosition);
+
+  function movePawn(position) {
+    const fromPos = { x: pawnPosition[0], z: pawnPosition[2] };
+    gsap.to(fromPos, {
+      x: position[0],
+      z: position[2],
+      duration: 0.3,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        setPawnPosition([fromPos.x, 0, fromPos.z]);
+      },
+    });
+  }
 
   return (
     <mesh
