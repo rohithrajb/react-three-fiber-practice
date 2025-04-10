@@ -10,6 +10,7 @@ import * as THREE from "three";
 import styles from "./App.module.css";
 import Chess from "./components/ChessGame";
 import JuggleGame from "./components/JuggleGame";
+import { Perf } from "r3f-perf";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -89,7 +90,8 @@ function SpotLightWithHelper({
 function Model2Scene() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas orthographic={true} camera={{ position: [15, 20, 30] }} shadows>
+      <Canvas camera={{ position: [15, 20, 30] }} shadows>
+        <Perf position="bottom-right" />
         <Model2 />
         <Cube color={"red"} position={[2, 2, 8]} />
         <OrbitControls target={[0, 10, 0]} minDistance={2} maxDistance={150} />
@@ -124,6 +126,7 @@ function Model1Scene() {
         camera={{ position: [5, 2, 3] }}
         style={{ backgroundColor: "darkgray" }}
       >
+        <Perf position="bottom-right" />
         <Model1 />
         <OrbitControls />
         <ambientLight intensity={0.5} />
@@ -226,6 +229,7 @@ function App() {
             {/* scene 3 */}
             <div style={{ width: "100vw", height: "100vh" }}>
               <Canvas camera={{ position: [5, 0, 0] }} shadows>
+                <Perf position="bottom-right" />
                 <OrbitControls />
                 <ambientLight intensity={1} />
                 <SpotLightWithHelper

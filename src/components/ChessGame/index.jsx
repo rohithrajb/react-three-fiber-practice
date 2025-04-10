@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import useChessStore from "./useChessStore";
 import gsap from "gsap";
+import { Perf } from "r3f-perf";
 
 function ChessBoardSquare({ position, color = "black" }) {
   const pawnPosition = useChessStore((state) => state.pawnPosition);
@@ -67,6 +68,7 @@ function ChessScene({ boardSquares }) {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas camera={{ position: [0, 5, 10] }}>
+        <Perf position="bottom-right" />
         <OrbitControls />
         <ambientLight />
         <ChessBoard boardSquares={boardSquares} />

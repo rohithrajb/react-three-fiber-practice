@@ -1,6 +1,7 @@
 import { Environment, OrbitControls, useHelper } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
+import { Perf } from "r3f-perf";
 import { useRef } from "react";
 import * as THREE from "three";
 
@@ -94,6 +95,7 @@ export default function JuggleGame() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas camera={{ position: [0, 0, 8] }} shadows>
+        <Perf position="bottom-right" />
         <Scene />
       </Canvas>
     </div>
