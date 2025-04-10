@@ -9,7 +9,7 @@ function Wall({ rotation, position, height = 1 }) {
     <RigidBody type="fixed">
       <mesh scale={5} rotation={rotation} position={position} receiveShadow>
         <planeGeometry args={[1, height]} />
-        <meshStandardMaterial color={"grey"} />
+        <meshStandardMaterial color={"lightgrey"} />
       </mesh>
     </RigidBody>
   );
@@ -36,14 +36,10 @@ function Ball({ position, color = "red", scale = 0.3 }) {
 }
 
 function Scene() {
-  const lightRef = useRef();
-
-  useHelper(lightRef, THREE.SpotLightHelper, "red");
   return (
     <>
       <OrbitControls />
       <spotLight
-        ref={lightRef}
         intensity={100}
         position={[6, 1, 6]}
         color="white"
