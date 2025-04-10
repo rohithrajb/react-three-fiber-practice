@@ -1,4 +1,4 @@
-import { Environment, OrbitControls } from "@react-three/drei";
+import { Environment, OrbitControls, useHelper } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
@@ -36,12 +36,16 @@ function Ball({ position, color = "red", scale = 0.3 }) {
 }
 
 function Scene() {
+  const lightRef = useRef();
+
+  useHelper(lightRef, THREE.SpotLightHelper, "red");
   return (
     <>
       <OrbitControls />
       <spotLight
-        intensity={50}
-        position={[1, 10, 0]}
+        ref={lightRef}
+        intensity={100}
+        position={[6, 1, 6]}
         color="white"
         angle={THREE.MathUtils.degToRad(50)}
         castShadow
@@ -80,7 +84,12 @@ function Scene() {
           height={2}
         />
       </Physics>
-      <Environment preset="apartment" background blur={0.2} />
+      <Environment
+        preset="apartment"
+        background
+        blur={0.2}
+        environmentIntensity={0.4}
+      />
     </>
   );
 }
