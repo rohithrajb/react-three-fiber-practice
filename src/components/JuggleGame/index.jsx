@@ -1,6 +1,7 @@
 import { Environment, OrbitControls, useHelper } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
+import { Leva, useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { useRef } from "react";
 import * as THREE from "three";
@@ -19,35 +20,65 @@ function Wall({ rotation, position, height = 1 }) {
 function Ball({ position, color = "red", scale = 0.3 }) {
   const ballRef = useRef();
 
+  const { ballBounce, ballCollider } = useControls("Physics", {
+    ballBounce: 1,
+    ballCollider: "ball",
+  });
+
+  const [colorMap, normalMap, roughnessMap] = useLoader(THREE.TextureLoader, [
+    "https://instamart-media-assets.swiggy.com/tr:w-512/DeSo/test/juggle-ball-3d/ball_textures/texture_Color.png?updatedAt=1744355950723",
+    "https://instamart-media-assets.swiggy.com/tr:w-512/DeSo/test/juggle-ball-3d/ball_textures/texture_NormalDX.png?updatedAt=1744355959729",
+    "https://instamart-media-assets.swiggy.com/tr:w-512/DeSo/test/juggle-ball-3d/ball_textures/texture_Roughness.png?updatedAt=1744355947535",
+  ]);
+
   return (
-    <RigidBody ref={ballRef} colliders="ball" restitution={1}>
+    <RigidBody ref={ballRef} colliders={ballCollider} restitution={ballBounce}>
       <mesh
         scale={scale}
         position={position}
         castShadow
         onPointerDown={(contact) => {
-          ballRef.current.setLinvel({ x: -contact.normal.x, y: 3, z: 0 });
+          ballRef.current.setLinvel({
+            x: -contact.normal.x * 3,
+            y: 3,
+            z: -contact.normal.z * 3,
+          });
         }}
       >
         <sphereGeometry />
-        <meshStandardMaterial roughness={0.3} color={color} />
+        <meshStandardMaterial map={colorMap} roughnessMap={roughnessMap} />
       </mesh>
     </RigidBody>
   );
 }
 
 function Scene() {
+  const { lightIntensity, environmentLight } = useControls("Light", {
+    lightIntensity: 100,
+    environmentLight: 0.4,
+  });
+
+  const { gravity, debug } = useControls("Physics", {
+    debug: false,
+    gravity: [0, -2, 0],
+  });
+
   return (
     <>
-      <OrbitControls />
+      <OrbitControls
+        autoRotate
+        enableRotate={false}
+        enablePan={false}
+        enableZoom={false}
+      />
       <spotLight
-        intensity={100}
+        intensity={lightIntensity}
         position={[6, 1, 6]}
         color="white"
         angle={THREE.MathUtils.degToRad(50)}
         castShadow
       />
-      <Physics gravity={[0, -2, 0]}>
+      <Physics gravity={gravity} debug={debug}>
         <Ball position={[1, 2.5, 0]} scale={0.6} />
         <Ball position={[-1, 1, 0]} scale={0.9} />
         {/* floor */}
@@ -85,7 +116,7 @@ function Scene() {
         preset="apartment"
         background
         blur={0.2}
-        environmentIntensity={0.4}
+        environmentIntensity={environmentLight}
       />
     </>
   );
@@ -94,7 +125,12 @@ function Scene() {
 export default function JuggleGame() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas camera={{ position: [0, 0, 8] }} shadows>
+      <Leva collapsed />
+      <Canvas
+        frameloop="demand"
+        camera={{ fov: 50, position: [-9, -2, 12] }}
+        shadows
+      >
         <Perf position="bottom-right" />
         <Scene />
       </Canvas>
