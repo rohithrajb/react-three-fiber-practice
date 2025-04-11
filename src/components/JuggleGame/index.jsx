@@ -81,6 +81,7 @@ function Scene() {
       <Physics gravity={gravity} debug={debug}>
         <Ball position={[1, 2.5, 0]} scale={0.6} />
         <Ball position={[-1, 1, 0]} scale={0.9} />
+        <Ball position={[0, 1, 2]} scale={0.8} />
         {/* floor */}
         <Wall
           rotation={[THREE.MathUtils.degToRad(-90), 0, 0]}
